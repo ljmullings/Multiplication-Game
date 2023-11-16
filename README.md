@@ -16,3 +16,9 @@ A winning strategy for the computer is implemented and documented.
 **Create logic to search board for location of product**: After Multiplication Logic has been created, take that product and find its location then call the modify method* (EASY)
 
 **Create multiplication logics**: Multiply the two numbers selected (EASY)
+
+**Create logic for computer to generate a number (1-9)** Needs to proabbly be random, can select the currently selected number  (MEDIUM)
+
+**Create logic for computer to select a number before user selects number**
+
+**Compile gameplay logic**: Put into a loop that ends when the computer or the user wins. 
