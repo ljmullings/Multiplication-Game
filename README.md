@@ -10,7 +10,8 @@ Extra credits will be given for:
 
 A winning strategy for the computer is implemented and documented.
 
-# Tasks (UPDATE README.MD BY ADDING YOUR INITIALS TO INDICATE PROGRESS/COMPLETION)
+# Tasks 
+(UPDATE README.MD BY ADDING YOUR INITIALS TO INDICATE PROGRESS/COMPLETION)
 1. **Create a method to modify gameboard**: Mips code needed to alter the gameboard when computer or user selects. MUST BE DIFFERENT SYMBOLS (MEDIUM)
 
 2. **Create logic to search board for location of product**: After Multiplication Logic has been created, take that product and find its location then call the modify method* (EASY)
