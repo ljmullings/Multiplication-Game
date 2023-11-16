@@ -10,15 +10,15 @@ Extra credits will be given for:
 
 A winning strategy for the computer is implemented and documented.
 
-# Tasks
-**Create a method to modify gameboard**: Mips code needed to alter the gameboard when computer or user selects. MUST BE DIFFERENT SYMBOLS (MEDIUM)
+# Tasks (UPDATE README.MD BY ADDING YOUR INITIALS TO INDICATE PROGRESS/COMPLETION)
+1. **Create a method to modify gameboard**: Mips code needed to alter the gameboard when computer or user selects. MUST BE DIFFERENT SYMBOLS (MEDIUM)
 
-**Create logic to search board for location of product**: After Multiplication Logic has been created, take that product and find its location then call the modify method* (EASY)
+2. **Create logic to search board for location of product**: After Multiplication Logic has been created, take that product and find its location then call the modify method* (EASY)
 
-**Create multiplication logics**: Multiply the two numbers selected (EASY)
+3. **Create multiplication logics**: Multiply the two numbers selected (EASY)
 
-**Create logic for computer to generate a number (1-9)** Needs to proabbly be random, can select the currently selected number  (MEDIUM)
+4. **Create logic for computer to generate a number (1-9)** Needs to proabbly be random, can select the currently selected number  (MEDIUM)
 
-**Create logic for computer to select a number before user selects number**
+5. **Create logic for computer to select a number before user selects number** (EASY, DO WITH TASK $)
 
-**Compile gameplay logic**: Put into a loop that ends when the computer or the user wins. 
+6. **Compile gameplay logic**: Put into a loop that ends when the computer or the user wins. 
