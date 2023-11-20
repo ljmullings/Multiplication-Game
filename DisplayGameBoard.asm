@@ -18,7 +18,6 @@
 
 .text
 .globl main
-
 main:
     # Load table base address
     la $t0, asciiTable 
@@ -58,6 +57,7 @@ main:
             addiu $t2, $t2, -1 # Decrement row counter
             j row_loop # jumps back to the start of the row loop to process the next row
 
+.globl display_additional_line
     display_additional_line:
         # Load additional line base address and size
         la $t0, additionalLine
@@ -84,6 +84,7 @@ main:
     li $t1, 0
 
 # Game Loop
+.globl game_loop
 game_loop:
     
     # Simulate randomness for the computer's turn
@@ -114,6 +115,8 @@ game_loop:
     # Condition to Exit Game Loop (Placeholder)
     # beq $t4, $some_value, end_game
     j game_loop
+
+.globl end_game
 end_game:
     # [Your code for ending the game]
     # Exit the program
