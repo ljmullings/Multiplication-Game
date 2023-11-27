@@ -1,13 +1,18 @@
 # Main.asm File
-# Include the displayGameboard procedure
+# Include necessary procedures
+.include "utilities.asm"
 .include "Gameboard.asm"
+.include "LogicHandler.asm"
 
 .data
-	.globl endPrompt
-	
-endPrompt:
-	.asciiz "Would you like to exit the game?"
+    .globl seed
+    
 
+seed: 
+    .word 123456789  # Initial seed value
+
+endPrompt:
+    .asciiz "Would you like to exit the game?"
 
 .text
 .globl main
@@ -16,60 +21,48 @@ main:
     # (Set seed for pseudorandom number generator, and other initializations)
 
     # Game Loop
-    	.globl game_loop
-	game_loop:
-	
-    	# Display the current state of the game board
-        jal displayGameboard
-        
-	# Prompt the user to continue or exit
-    	li $v0, 4                 # syscall to print string
-    	la $a0, endPrompt         # load address of the continue prompt
-    	syscall
+    .globl game_loop
+    game_loop:
 
-    	li $v0, 12                # syscall to read character
-    	syscall
-    	move $t0, $v0             # move read character to $t0
+    # Display the current state of the game board
+    jal displayGameboard
 
-    	# Compare input to 'Y' and 'N'
-    	li $t1, 'Y'               # ASCII value for 'Y'
-    	beq $t0, $t1, end_game    # if input is 'Y', jump to end_game
+    # Computer's Turn Logic
+    jal computerSelectNumber
+    move $t3, $v0 # Store the computer's choice
 
-    	# No need for the bne instruction here
-    	# The program will naturally loop back if the user doesn't choose to exit
-        # Computer's Turn Logic
-        # (Generate random number and handle computer's turn)
-        jal randomGenerator
-        move $t3, $v0 # Store the random number in $t3
-   
-    	# Display Computer's Choice
-    	li $v0, 1        # syscall to print an integer
-    	move $a0, $t3    # move the generated random number into $a0
-    	syscall
-    	# Print a newline
-    	li $a0, 10
-    	li $v0, 11
-    	syscall
+    # Display Computer's Choice
+    # [Your existing code to display the computer's choice]
 
-    	# User's Turn Logic
-    	la $a0, prompt
-    	li $v0, 4
-    	syscall
-    	li $v0, 5
-    	syscall
+    # User's Turn Logic
+    # [Your existing code for the user's input]
 
-    	add $t1, $v0, $t1 # adds the user input in v0 to the counter t1. This updates the value of t1, which heps genereate the next random varibale
-    
-    	# Check for Win Condition (Placeholder)
-    	# [Your logic to check for 4 in a row]
-    	# Condition to Exit Game Loop (Placeholder)
-    	# beq $t4, $some_value, end_game
-  
+    # Call multiplyNumbers with computer's and user's choices
+    move $a0, $t3  # Computer's choice
+    move $a1, $v0  # User's choice (from user's turn logic)
+    jal multiplyNumbers
+    move $t4, $v0  # Store the result of multiplication
 
-    	j game_loop               # Continue loop
-    
-   
-	
+    # Check for Win Condition or update game state
+    # [Your logic here]
+
+    # Prompt the user to continue or exit
+    li $v0, 4                 # syscall to print string
+    la $a0, endPrompt         # load address of the continue prompt
+    syscall
+
+    li $v0, 12                # syscall to read character
+    syscall
+    move $t0, $v0             # move read character to $t0
+
+    li $t1, 'Y'               # ASCII value for 'Y'
+    beq $t0, $t1, end_game    # if input is 'Y', jump to end_game
+
+    # No need for the bne instruction here
+    # The program will naturally loop back if the user doesn't choose to exit
+
+    j game_loop               # Continue loop
+
     .globl end_game
     end_game:
         # Code for ending the game and exiting
