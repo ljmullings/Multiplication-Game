@@ -80,11 +80,3 @@ main:
         syscall
 
     .end
-
-.globl end_game
-end_game:
-    # [Your code for ending the game]
-    # Exit the program
-    li $v0, 10
-    syscall
-.end
