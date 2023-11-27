@@ -8,7 +8,11 @@
     .globl additionalLineSize
     .globl prompt
     .globl upperBound
+    .globl seed
 
+
+seed: 
+	.word 123456789  # Initial seed value
 asciiTable: 
     .word 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 24, 25, 27, 28, 30, 32, 35, 36, 40, 42, 45, 48, 49, 54, 56, 63, 64, 72, 81
 
@@ -100,14 +104,29 @@ displayGameboard:
 # Procedure for Random Number Generation
 .globl randomGenerator
 randomGenerator:
-    # Generate a random number using syscall
-    li $v0, 42       # syscall for random int in range
-    li $a0, 12345    # ID of the pseudorandom number generator
-    li $a1, 9        # Upper bound
-    syscall
+    # Simple linear congruential generator formula: X_{n+1} = (a * X_n + c) % m
+    # Constants (can be chosen for better randomness)
+    li $t0, 40      # a - Multiplier
+    li $t1, 362436069  # c - Increment
+    li $t2, 9       # m - Modulus (for generating numbers in the range 1-9)
 
-    add $v0, $v0, 1  # Increment the random number by 1
-    jr $ra           # Return the random number in $v0 and return to the caller
+    # Load the last generated number (or seed if first time)
+    lw $t3, seed    # Load X_n (seed at first)
+
+    # Compute a * X_n + c
+    mul $t3, $t3, $t0  # a * X_n
+    add $t3, $t3, $t1  # a * X_n + c
+
+    # Modulus m to get the range 1-9
+    rem $v0, $t3, $t2  # X_{n+1} = (a * X_n + c) % m
+
+    # Since we want numbers from 1 to 9 instead of 0 to 8
+    addi $v0, $v0, 1
+
+    # Store the new number back to seed for next use
+    sw $v0, seed
+
+    jr $ra           # Return the random number in $v0
 
 end_display:
     jr $ra # Return to the caller
