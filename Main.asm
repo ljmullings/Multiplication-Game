@@ -1,36 +1,5 @@
-# Main.asm File
+.include "Gameboard.asm"
 
-# Include global variables and procedures
-# Data Segment
-.data
-    .globl asciiTable
-    .globl rowSize
-    .globl numRows
-    .globl additionalLine
-    .globl additionalLineSize
-    .globl prompt
-    .globl upperBound
-
-asciiTable: 
-    .word 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 24, 25, 27, 28, 30, 32, 35, 36, 40, 42, 45, 48, 49, 54, 56, 63, 64, 72, 81
-
-rowSize: 
-    .word 6
-
-numRows: 
-    .word 6
-
-additionalLine: 
-    .word 1, 2, 3, 4, 5, 6, 7, 8, 9
-
-additionalLineSize: 
-    .word 9
-
-prompt: 
-    .asciiz "Enter your number (1-9): "
-
-upperBound: 
-    .word 9 # Upper bound for random number generation
 
 .text
 .globl main
@@ -39,8 +8,17 @@ main:
     # (Set seed for pseudorandom number generator, and other initializations)
 
     # Game Loop
+    	.globl game_loop
 	game_loop:
-    
+	
+    	# Display the current state of the game board
+        jal displayGameboard
+
+        # Computer's Turn Logic
+        # (Generate random number and handle computer's turn)
+        jal randomGenerator
+        move $t3, $v0 # Store the random number in $t3
+    	
     	# Generate a random number for the computer's turn using syscall
     	li $v0, 42       # syscall for random int in range
     	li $a0, 12345    # ID of the pseudorandom number generator
@@ -78,5 +56,3 @@ main:
         # Code for ending the game and exiting
         li $v0, 10
         syscall
-
-    .end
