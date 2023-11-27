@@ -1,4 +1,12 @@
+# Main.asm File
+# Include the displayGameboard procedure
 .include "Gameboard.asm"
+
+.data
+	.globl endPrompt
+	
+endPrompt:
+	.asciiz "Would you like to exit the game?"
 
 
 .text
@@ -18,14 +26,7 @@ main:
         # (Generate random number and handle computer's turn)
         jal randomGenerator
         move $t3, $v0 # Store the random number in $t3
-    	
-    	# Generate a random number for the computer's turn using syscall
-    	li $v0, 42       # syscall for random int in range
-    	li $a0, 12345    # ID of the pseudorandom number generator
-    	li $a1, 9      # Upper bound (assuming you want numbers from 0 to 9)
-    	syscall
-    	add $t3, $a0, 1    # Move the generated random number into $t3 for later use
-
+   
     	# Display Computer's Choice
     	li $v0, 1        # syscall to print an integer
     	move $a0, $t3    # move the generated random number into $a0
@@ -48,8 +49,25 @@ main:
     	# [Your logic to check for 4 in a row]
     	# Condition to Exit Game Loop (Placeholder)
     	# beq $t4, $some_value, end_game
+    	# Prompt the user to continue or exit
+    	li $v0, 4                 # syscall to print string
+    	la $a0, endPrompt         # load address of the continue prompt
+    	syscall
+
+    	li $v0, 12                # syscall to read character
+    	syscall
+    	move $t0, $v0             # move read character to $t0
+
+    	# Compare input to 'Y' and 'N'
+    	li $t1, 'Y'               # ASCII value for 'Y'
+    	beq $t0, $t1, end_game    # if input is 'Y', jump to end_game
+
+    	# No need for the bne instruction here
+    	# The program will naturally loop back if the user doesn't choose to exit
+
+    	j game_loop               # Continue loop
     
-    	j game_loop
+   
 	
     .globl end_game
     end_game:
