@@ -1,31 +1,39 @@
+# Data Segment
 .data
+    .globl asciiTable
+    .globl rowSize
+    .globl numRows
+    .globl additionalLine
+    .globl additionalLineSize
+    .globl prompt
+    .globl upperBound
 
-    # Define the ASCII table and game board parameters
+asciiTable: 
+    .word 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 24, 25, 27, 28, 30, 32, 35, 36, 40, 42, 45, 48, 49, 54, 56, 63, 64, 72, 81
 
-    asciiTable: .word 1, 2, 3, 4, 5, 6,
-                     7, 8, 9, 10, 12, 14,
-                     15, 16, 18, 20, 21, 24,
-                     25, 27, 28, 30, 32, 35,
-                     36, 40, 42, 45, 48, 49,
-                     54, 56, 63, 64, 72, 81
+rowSize: 
+    .word 6
 
-    rowSize: .word 6
-    numRows: .word 6
-    additionalLine: .word 1, 2, 3, 4, 5, 6, 7, 8, 9
-    additionalLineSize: .word 9
-    prompt: .asciiz "Enter your number (1-9): "
-    upperBound: .word 9 # Upper bound for random number generation
+numRows: 
+    .word 6
 
+additionalLine: 
+    .word 1, 2, 3, 4, 5, 6, 7, 8, 9
+
+additionalLineSize: 
+    .word 9
+
+prompt: 
+    .asciiz "Enter your number (1-9): "
+
+upperBound: 
+    .word 9 # Upper bound for random number generation
+
+# Text Segment
 .text
-.globl main
+.globl displayGameboard
+displayGameboard:
 
-main:
-
-    # Set seed for pseudorandom number generator
-    li $v0, 40       # syscall for setting seed
-    li $a0, 12345    # ID of the pseudorandom number generator
-    li $a1, 67890    # Seed value
-    syscall
     
     # Load table base address
     la $t0, asciiTable 
@@ -86,9 +94,7 @@ main:
             addiu $t0, $t0, 4 # Move to the next element
             addiu $t3, $t3, -1 # Decrement element counter
             j additional_line_loop
-            
-    # Initialize a counter for simulated randomness
-    li $t1, 0
+     jr $ra # Return to caller 
     
 
 # Game Loop
@@ -123,7 +129,9 @@ game_loop:
     # [Your logic to check for 4 in a row]
     # Condition to Exit Game Loop (Placeholder)
     # beq $t4, $some_value, end_game
+    
     j game_loop
+.globl end_game
 end_game:
     # [Your code for ending the game]
     # Exit the program
