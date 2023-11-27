@@ -21,7 +21,22 @@ main:
 	
     	# Display the current state of the game board
         jal displayGameboard
+        
+	# Prompt the user to continue or exit
+    	li $v0, 4                 # syscall to print string
+    	la $a0, endPrompt         # load address of the continue prompt
+    	syscall
 
+    	li $v0, 12                # syscall to read character
+    	syscall
+    	move $t0, $v0             # move read character to $t0
+
+    	# Compare input to 'Y' and 'N'
+    	li $t1, 'Y'               # ASCII value for 'Y'
+    	beq $t0, $t1, end_game    # if input is 'Y', jump to end_game
+
+    	# No need for the bne instruction here
+    	# The program will naturally loop back if the user doesn't choose to exit
         # Computer's Turn Logic
         # (Generate random number and handle computer's turn)
         jal randomGenerator
@@ -49,21 +64,7 @@ main:
     	# [Your logic to check for 4 in a row]
     	# Condition to Exit Game Loop (Placeholder)
     	# beq $t4, $some_value, end_game
-    	# Prompt the user to continue or exit
-    	li $v0, 4                 # syscall to print string
-    	la $a0, endPrompt         # load address of the continue prompt
-    	syscall
-
-    	li $v0, 12                # syscall to read character
-    	syscall
-    	move $t0, $v0             # move read character to $t0
-
-    	# Compare input to 'Y' and 'N'
-    	li $t1, 'Y'               # ASCII value for 'Y'
-    	beq $t0, $t1, end_game    # if input is 'Y', jump to end_game
-
-    	# No need for the bne instruction here
-    	# The program will naturally loop back if the user doesn't choose to exit
+  
 
     	j game_loop               # Continue loop
     
