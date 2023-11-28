@@ -9,15 +9,17 @@
     .globl prompt
     .globl upperBound
     .globl seed
-    .globl selectionList
+    .globl currentTurn
+    #.globl selectionList
+
 
 seed: 
 	.word 123456789  # Initial seed value
 asciiTable: 
     .word 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 24, 25, 27, 28, 30, 32, 35, 36, 40, 42, 45, 48, 49, 54, 56, 63, 64, 72, 81
 
-selectionList:
-    .byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 
+#selectionList:
+    #.byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 
 
 rowSize: 
     .word 6
@@ -44,7 +46,7 @@ displayGameboard:
     
     # Load table base addresses
     la $t0, asciiTable 
-    la $t4, selectionList #Assume $t2, $t3 are used for loop counters or other purpose
+    #la $t4, selectionList #Assume $t2, $t3 are used for loop counters or other purpose
 
     # Load row and column sizes
     lw $t1, rowSize
@@ -58,36 +60,18 @@ displayGameboard:
         
         # Column loop
         col_loop:
-            beq $t3, $zero, next_row
-            lw $a0, 0($t0)  # Load the current table element
-            lb $t5, 0($t4)  # Load the selection status of the current number
+            beq $t3, $zero, next_row # checks if all columns in the current row have been processed. If so, it jups to next row
+            lw $a0, 0($t0) # Load the current table element into $a0
+            li $v0, 1 # Prepare to print integer
+            syscall # printing the integer in $a0
 
-            # Check if current number is selected and print brackets if so
-            beq $t5, $zero, print_normal
-            li $a0, '('     # ASCII for '('
-            li $v0, 11
-            syscall
-
-        print_normal:
-            li $v0, 1       # Print integer syscall
-            move $a0, $t0   # Move the number to be printed
-            syscall
-
-            # Check again and print closing bracket if needed
-            beq $t5, $zero, skip_bracket
-            li $a0, ')'     # ASCII for ')'
-            li $v0, 11
-            syscall
-
-        skip_bracket:
             # Print a space
-            li $a0, 32
+            li $a0, 32 
             li $v0, 11
             syscall
 
             addiu $t0, $t0, 4 # Move to the next table element
-            addiu $t4, $t4, 1 # Move to the next selection status
-            addiu $t3, $t3, -1
+            addiu $t3, $t3, -1 # Decrement column counter
             j col_loop
 
         next_row:
