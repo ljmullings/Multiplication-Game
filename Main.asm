@@ -8,8 +8,10 @@
     .globl computer_prompt
     .globl process_prompt
     .globl start_prompt
+    
 
     currentTurn: .word 0
+    
     endPrompt:       .asciiz "Would you like to exit the game?"
     computer_prompt: .asciiz "The Computer picked... "
     process_prompt:  .asciiz "Product is..."
@@ -90,35 +92,39 @@ main:
 
     process_turn:
  	# Print values before multiplication
-    	# li $v0, 1
-    	# move $a0, $t3
-    	# syscall
-    	# move $a0, $t9
-    	# syscall
-        # Multiply Choices (if both choices are available)
-    	move $a0, $t3            # Computer's choice
+    	li $v0, 1
+    	move $a0, $t3
+    	syscall
+    	move $a0, $t9
+    	syscall
+       # Multiply Choices
+   	move $a0, $t3            # Computer's choice
     	move $a1, $t9            # User's choice
     	jal multiplyNumbers
     	move $t2, $v0            # Store the multiplication result in $t2
-    	
-    	 # Check if the product is within the bounds of the gameboard
-    	# This logic depends on how your gameboard is structured
-   	# ...
+
+    	# Save $t2 on the stack if alter_board might modify it
+    	addi $sp, $sp, -4
+    	sw $t2, 0($sp)
 
     	# Update the gameboard
-    	move $a0, $t5            # Current turn (0 for user, 1 for computer)
-    	move $a1, $t2            # The cell to update (based on the product)
+    	move $a0, $t5            # Current turn
+    	move $a1, $t2            # The cell to update
     	jal alter_board
-    	
+
+    	# Restore $t2 from the stack
+    	lw $t2, 0($sp)
+    	addi $sp, $sp, 4
+
     	# Print the result prompt message
     	li $v0, 4                # Syscall for printing string
-    	la $a0, process_prompt    # Load address of the result prompt message
-    	syscall                  # Execute syscall to print the message
+    	la $a0, process_prompt
+    	syscall
 
     	# Print the multiplication result
-    	li $v0, 1                # Syscall for printing integer
-    	move $a0, $t2            # Move the multiplication result to $a0
-    	syscall                  # Execute syscall to print the number
+    	li $v0, 1
+    	move $a0, $t2
+    	syscall
 
     	# Optionally print a newline or space after the number
     	li $v0, 11               # Syscall for printing character
